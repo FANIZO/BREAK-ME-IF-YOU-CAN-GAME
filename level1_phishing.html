@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Escape the Hacker - Level 1</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      color: white;
+      font-family: monospace;
+      padding: 40px;
+      text-align: center;
+    }
+    .email {
+      border: 1px solid gray;
+      padding: 20px;
+      margin: 20px auto;
+      width: 80%;
+      background-color: #1c1c1c;
+      cursor: pointer;
+    }
+    .email:hover {
+      background-color: #292929;
+    }
+    #message {
+      font-size: 1.2em;
+      color: lime;
+      margin-top: 30px;
+    }
+  </style>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<h1>🛡 Escape the Hacker - Level 1</h1>
+<p>Two emails were sent to your inbox. One is a phishing attempt. Choose wisely.</p>
+
+<div class="email" onclick="failLevel()">
+  <strong>Subject:</strong> Urgent - Account Locked<br><br>
+  Your bank account has been locked. Click <a href='#'>here</a> to verify your identity.<br>
+  - Bank Security Team
+</div>
+
+<div class="email" onclick="passLevel()">
+  <strong>Subject:</strong> Reminder: Cybersecurity Training<br><br>
+  Hello team, just a reminder that your cybersecurity training is due Friday. No action is required for now.<br>
+  - HR Department
+</div>
+
+<div id="message"></div>
+
+<script>
+  // Replace with your Firebase config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  const name = localStorage.getItem("hackerName");
+
+  function updateProgress(level) {
+    if (name) {
+      db.ref("players/" + name).set({ level: level });
+    }
+  }
+
+  function failLevel() {
+    document.getElementById("message").style.color = "red";
+    document.getElementById("message").innerHTML = "❌ You clicked a phishing email! Ransomware activated...";
+    setTimeout(() => {
+      window.location.href = "ransom.html";
+    }, 3000);
+  }
+
+  function passLevel() {
+    document.getElementById("message").innerHTML = "✅ Well done! You identified the safe email. Moving to next level...";
+    updateProgress(1);
+    setTimeout(() => {
+      window.location.href = "password.html";
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
